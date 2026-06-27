@@ -144,6 +144,18 @@ export OPENCODE_VPN_PROXY="http://127.0.0.1:10809"
 
 可以。删除 `opencode.json` 中的 `webfetch: deny` 即可。但 Agent 可能在两种方式间切换，不够稳定。
 
+### Q: 访问国内网站（百度、知乎等）也会走代理？
+
+会。当前 Skill 配置的是全量代理模式，`curl.exe --proxy` 不区分国内外 URL，所有请求都通过 VPN。
+
+**后果：** 国内网站流量也会绕经代理服务器，速度可能略慢。
+
+**推荐解决方案：** 在 FIClash/Clash 客户端中配置分流规则，国内 IP 直连、国外 IP 走代理。Clash 本身就是为这个设计的，修改分流规则对 OpenCode 完全透明，无需改动 Skill。
+
+**备选方案：**
+- 不推荐在 Skill/LLM 层面做 URL 判断（不可靠）
+- 如果不需要代理访问内网，删除 `opencode.json` 中的 `webfetch: deny` 恢复默认即可
+
 ## 许可
 
 MIT License
