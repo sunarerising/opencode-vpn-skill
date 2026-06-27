@@ -6,14 +6,28 @@ Write-Host " OpenCode VPN Web Search Skill - Installer " -ForegroundColor Cyan
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Check if OpenCode is installed
-$opencodePath = Get-Command opencode -ErrorAction SilentlyContinue
-if (-not $opencodePath) {
-    Write-Host "[!] OpenCode not found in PATH." -ForegroundColor Red
-    Write-Host "    Please install OpenCode first: https://opencode.ai/download"
-    exit 1
+# Ask user for OpenCode path
+Write-Host "OpenCode path (press Enter to skip):" -ForegroundColor Yellow
+Write-Host "  Examples:" -ForegroundColor Gray
+Write-Host "    C:\Users\<user>\AppData\Local\Programs\opencode\opencode.exe" -ForegroundColor Gray
+Write-Host "    C:\Users\<user>\scoop\shims\opencode.exe" -ForegroundColor Gray
+Write-Host "    %USERPROFILE%\.opencode\bin\opencode.exe" -ForegroundColor Gray
+Write-Host ""
+
+$opencodeInput = Read-Host "Path"
+$opencodeInput = $opencodeInput.Trim()
+
+if ([string]::IsNullOrWhiteSpace($opencodeInput)) {
+    Write-Host "[i] OpenCode path not provided, skipping verification." -ForegroundColor Yellow
+} else {
+    $opencodeInput = [System.Environment]::ExpandEnvironmentVariables($opencodeInput)
+    if (Test-Path -LiteralPath $opencodeInput) {
+        Write-Host "[+] OpenCode found at: $opencodeInput" -ForegroundColor Green
+    } else {
+        Write-Host "[i] File not found: $opencodeInput" -ForegroundColor Yellow
+        Write-Host "    Installation will continue anyway."
+    }
 }
-Write-Host "[+] OpenCode found at: $($opencodePath.Source)" -ForegroundColor Green
 
 # Check if curl.exe is available
 $curlPath = Get-Command curl.exe -ErrorAction SilentlyContinue
