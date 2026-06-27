@@ -12,3 +12,6 @@ Thumbs.db
 
 # VPN web search cache
 .web/
+
+# SSH Key
+.ssh/
