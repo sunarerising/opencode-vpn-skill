@@ -58,11 +58,23 @@ Limit output to first 200 lines:
 curl.exe --proxy $env:OPENCODE_VPN_PROXY -sL "<URL>" | Select-Object -First 200
 ```
 
-Save to temp file:
+## Save to Project Local Directory
+
+For large pages, save to `.web/` using fixed filenames (each new fetch overwrites the previous):
 
 ```
-curl.exe --proxy $env:OPENCODE_VPN_PROXY -sL -o "$env:TEMP\output.html" "<URL>"
+curl.exe --proxy $env:OPENCODE_VPN_PROXY -sL "<URL>" -o ".web\fetch.html"
+curl.exe --proxy $env:OPENCODE_VPN_PROXY -sL -H "Accept: text/markdown" "<URL>" -o ".web\fetch.md"
+curl.exe --proxy $env:OPENCODE_VPN_PROXY -sL -H "Accept: application/json" "<URL>" -o ".web\fetch.json"
 ```
+
+After saving, read the file with the `read` tool:
+
+```
+read(".web/fetch.md")
+```
+
+The `.web/` directory is gitignored. Fixed filenames prevent unlimited growth.
 
 ## Fallback: PowerShell Invoke-WebRequest
 
